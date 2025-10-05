@@ -8,7 +8,7 @@
     "dev": "tsx server.js",
     "start": "node --loader tsx server.js",
     "build": "npm install"
-  },
+},
   "dependencies": {
     "hono": "^4.0.0",
     "@hono/node-server": "^1.12.0",
