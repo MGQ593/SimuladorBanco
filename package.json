@@ -6,8 +6,12 @@
   "scripts": {
     "dev": "tsx server.js",
     "build": "vite build",
+    "start": "tsx server.js",
     "deploy": "wrangler pages deploy"
-},
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "@hono/node-server": "^1.19.5",
     "hono": "^4.0.0",
