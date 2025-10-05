@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { serveStatic } from 'hono/cloudflare-pages';
 
 type Bindings = {
-  ASSETS: Fetcher;
+  ASSETS: any;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -73,7 +73,7 @@ app.post('/api/calculate', async (c) => {
       montoTotal: montoTotalChevy,
       costoFinanciamiento: interesFijoChevy,
       tasaAnual: 3.59,
-      nombre: 'Chevy Plan'
+      nombre: 'ChevyPlan'
     };
 
     const bancario: OpcionFinanciamiento = {
@@ -114,76 +114,80 @@ app.get('/', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Chevy Plan - Compara tu Financiamiento</title>
+    <title>Simulador ChevyPlan - Compara tu Financiamiento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
-        .gold-gradient {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        .corporate-accent {
+            background: #c8a45e;
         }
-        .card-hover {
-            transition: all 0.3s ease;
+        .card-shadow {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: box-shadow 0.3s ease;
         }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+        .card-shadow:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
         }
-        .input-gold:focus {
-            border-color: #FFD700;
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        .input-focus:focus {
+            border-color: #c8a45e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(200, 164, 94, 0.1);
         }
         .animate-fade-in {
-            animation: fadeIn 0.5s ease-in;
+            animation: fadeIn 0.3s ease-in;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .pulse-gold {
-            animation: pulseGold 2s infinite;
+        .result-number {
+            font-size: 1.25rem;
+            font-weight: 600;
         }
-        @keyframes pulseGold {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+        @media (min-width: 768px) {
+            .result-number {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen py-8 px-4">
-    <!-- Header -->
-    <div class="max-w-7xl mx-auto mb-8">
-        <div class="bg-black rounded-2xl p-6 shadow-2xl">
-            <div class="flex items-center justify-between flex-wrap gap-4">
+<body class="min-h-screen py-4 px-3">
+    <!-- Header Negro -->
+    <div class="max-w-6xl mx-auto mb-4">
+        <div class="bg-black rounded-lg p-3 md:p-4 card-shadow">
+            <div class="flex items-center justify-between flex-wrap gap-3">
                 <img src="https://www.chevyplan.com.ec/wp-content/uploads/2025/08/logo-chevyplan-25.webp" 
-                     alt="Chevy Plan" 
-                     class="h-12 md:h-16">
+                     alt="ChevyPlan" 
+                     class="h-8 md:h-10">
                 <div class="text-right">
-                    <h1 class="text-2xl md:text-3xl font-bold text-white">Simulador de Financiamiento</h1>
-                    <p class="text-gray-400 mt-1">Compara y ahorra con Chevy Plan</p>
+                    <h1 class="text-base md:text-lg font-semibold text-white">Simulador de Financiamiento</h1>
+                    <p class="text-xs text-gray-400 mt-0.5">Compara y ahorra con ChevyPlan</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Formulario -->
-        <div class="lg:col-span-1">
-            <div class="bg-black rounded-2xl p-6 shadow-2xl card-hover">
-                <div class="gold-gradient rounded-xl p-4 mb-6">
-                    <h2 class="text-2xl font-bold text-black flex items-center gap-2">
-                        <i class="fas fa-calculator"></i>
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
+        <!-- Formulario + Info + WhatsApp (desktop) -->
+        <div class="lg:col-span-1 space-y-3">
+            <!-- Formulario -->
+            <div class="bg-white rounded-lg p-3 md:p-4 card-shadow">
+                <div class="corporate-accent rounded-lg p-2.5 mb-3">
+                    <h2 class="text-base font-semibold text-white flex items-center gap-2">
+                        <i class="fas fa-calculator text-sm"></i>
                         Datos del Financiamiento
                     </h2>
                 </div>
 
-                <form id="calculatorForm" class="space-y-6">
+                <form id="calculatorForm" class="space-y-3">
                     <div>
-                        <label class="block text-gray-300 font-semibold mb-2">
-                            <i class="fas fa-dollar-sign mr-2"></i>Monto a Financiar
+                        <label class="block text-gray-700 font-medium mb-1.5 text-sm">
+                            <i class="fas fa-dollar-sign mr-1 text-xs"></i>Monto a Financiar
                         </label>
                         <input type="number" 
                                id="monto" 
@@ -191,8 +195,8 @@ app.get('/', (c) => {
                                max="90000" 
                                step="1000"
                                value="50000"
-                               class="w-full px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg text-white text-xl font-bold focus:outline-none input-gold">
-                        <div class="flex justify-between mt-2 text-sm text-gray-400">
+                               class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 text-base font-semibold focus:outline-none input-focus">
+                        <div class="flex justify-between mt-1 text-xs text-gray-500">
                             <span>$14,000</span>
                             <span>$90,000</span>
                         </div>
@@ -202,15 +206,15 @@ app.get('/', (c) => {
                                max="90000" 
                                step="1000"
                                value="50000"
-                               class="w-full mt-2">
+                               class="w-full mt-1">
                     </div>
 
                     <div>
-                        <label class="block text-gray-300 font-semibold mb-2">
-                            <i class="fas fa-calendar-alt mr-2"></i>Plazo en Meses
+                        <label class="block text-gray-700 font-medium mb-1.5 text-sm">
+                            <i class="fas fa-calendar-alt mr-1 text-xs"></i>Plazo en Meses
                         </label>
                         <select id="meses" 
-                                class="w-full px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg text-white text-xl font-bold focus:outline-none input-gold">
+                                class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 text-base font-semibold focus:outline-none input-focus">
                             <option value="24">24 meses (2 años)</option>
                             <option value="36">36 meses (3 años)</option>
                             <option value="48">48 meses (4 años)</option>
@@ -221,75 +225,86 @@ app.get('/', (c) => {
                     </div>
 
                     <button type="submit" 
-                            class="w-full gold-gradient text-black font-bold py-4 px-6 rounded-lg text-lg hover:opacity-90 transition-all pulse-gold flex items-center justify-center gap-2">
-                        <i class="fas fa-chart-line"></i>
-                        CALCULAR FINANCIAMIENTO
+                            class="w-full corporate-accent text-white font-semibold py-2.5 px-4 rounded-md text-sm hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-chart-line text-sm"></i>
+                        Calcular Financiamiento
                     </button>
                 </form>
 
-                <div class="mt-6 p-4 bg-gray-800 rounded-lg">
-                    <h3 class="text-yellow-400 font-bold mb-2 flex items-center gap-2">
-                        <i class="fas fa-info-circle"></i>
-                        Información Importante
-                    </h3>
-                    <ul class="text-gray-300 text-sm space-y-1">
-                        <li>• Tasa Chevy Plan: <strong>3.59% anual fija</strong></li>
+                <!-- Información Importante -->
+                <div class="mt-3 p-3 bg-gray-50 rounded-md border border-gray-200">
+                    <h3 class="text-gray-700 font-semibold mb-1.5 text-sm">Información Importante</h3>
+                    <ul class="text-gray-600 text-xs space-y-0.5">
+                        <li>• Tasa ChevyPlan: <strong>3.59% anual fija</strong></li>
                         <li>• Tasa Bancaria: <strong>16% anual</strong></li>
                         <li>• Simulación referencial</li>
                     </ul>
                 </div>
             </div>
+
+            <!-- Botón de WhatsApp (solo visible en desktop) -->
+            <div class="hidden lg:block bg-white rounded-lg p-3 md:p-4 card-shadow text-center">
+                <h3 class="text-sm font-semibold text-gray-800 mb-2">¿Listo para tu ChevyPlan?</h3>
+                <a href="https://wa.me/593981813395" 
+                   target="_blank"
+                   class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-5 rounded-md text-sm transition-all w-full justify-center">
+                    <i class="fab fa-whatsapp text-lg"></i>
+                    Consultar por WhatsApp
+                </a>
+                <p class="text-gray-600 mt-2 text-xs">098 1813 395</p>
+            </div>
         </div>
 
         <!-- Resultados -->
-        <div class="lg:col-span-2 space-y-6" id="resultados" style="display: none;">
+        <div class="lg:col-span-2 space-y-3 md:space-y-4" id="resultados" style="display: none;">
             <!-- Resumen de Ahorro -->
-            <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 shadow-2xl animate-fade-in">
-                <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="bg-green-600 rounded-lg p-3 md:p-4 card-shadow animate-fade-in">
+                <div class="flex items-center justify-between flex-wrap gap-3">
                     <div>
-                        <p class="text-green-100 text-sm uppercase tracking-wide">Tu Ahorro con Chevy Plan</p>
-                        <p class="text-4xl md:text-5xl font-bold text-white mt-2" id="ahorroTotal">$0</p>
-                        <p class="text-green-100 mt-1" id="ahorroDetalle"></p>
+                        <p class="text-green-50 text-xs uppercase tracking-wide font-medium">Tu Ahorro con ChevyPlan</p>
+                        <p class="text-2xl md:text-3xl font-bold text-white mt-1" id="ahorroTotal">$0</p>
+                        <p class="text-green-50 text-xs mt-0.5" id="ahorroDetalle"></p>
                     </div>
-                    <div class="bg-white/20 rounded-full p-4">
-                        <i class="fas fa-piggy-bank text-5xl text-white"></i>
+                    <div class="bg-white/20 rounded-full p-2.5">
+                        <i class="fas fa-piggy-bank text-2xl md:text-3xl text-white"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Comparación de Opciones -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Chevy Plan -->
-                <div class="bg-black rounded-2xl p-6 shadow-2xl border-2 border-yellow-500 card-hover animate-fade-in">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-bold text-yellow-400">
-                            <i class="fas fa-star mr-2"></i>Chevy Plan
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- ChevyPlan -->
+                <div class="bg-white rounded-lg p-3 md:p-4 card-shadow border-2 border-green-500 animate-fade-in">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <h3 class="text-base font-semibold text-gray-800 flex items-center gap-1.5">
+                            <i class="fas fa-star text-yellow-500 text-sm"></i>
+                            ChevyPlan
                         </h3>
-                        <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        <span class="bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
                             RECOMENDADO
                         </span>
                     </div>
                     
-                    <div class="space-y-4">
-                        <div class="bg-gray-900 rounded-lg p-4">
-                            <p class="text-gray-400 text-sm">Cuota Mensual</p>
-                            <p class="text-3xl font-bold text-yellow-400" id="cuotaChevy">$0</p>
+                    <div class="space-y-2.5">
+                        <div class="bg-gray-50 rounded-md p-2.5 border border-gray-200">
+                            <p class="text-gray-600 text-xs font-medium">Cuota Mensual</p>
+                            <p class="result-number text-green-600" id="cuotaChevy">$0</p>
                         </div>
                         
-                        <div class="space-y-2 text-gray-300">
+                        <div class="space-y-1 text-xs text-gray-700">
                             <div class="flex justify-between">
                                 <span>Monto Financiado:</span>
                                 <strong id="montoChevy">$0</strong>
                             </div>
                             <div class="flex justify-between">
                                 <span>Intereses:</span>
-                                <strong class="text-green-400" id="interesChevy">$0</strong>
+                                <strong class="text-green-600" id="interesChevy">$0</strong>
                             </div>
                             <div class="flex justify-between">
                                 <span>Total a Pagar:</span>
-                                <strong class="text-yellow-400" id="totalChevy">$0</strong>
+                                <strong class="text-gray-900" id="totalChevy">$0</strong>
                             </div>
-                            <div class="flex justify-between pt-2 border-t border-gray-700">
+                            <div class="flex justify-between pt-1 border-t border-gray-200">
                                 <span>Tasa:</span>
                                 <strong>3.59% anual</strong>
                             </div>
@@ -298,36 +313,37 @@ app.get('/', (c) => {
                 </div>
 
                 <!-- Crédito Bancario -->
-                <div class="bg-black rounded-2xl p-6 shadow-2xl border-2 border-red-500 card-hover animate-fade-in">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-bold text-red-400">
-                            <i class="fas fa-university mr-2"></i>Crédito Bancario
+                <div class="bg-white rounded-lg p-3 md:p-4 card-shadow border-2 border-red-400 animate-fade-in">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <h3 class="text-base font-semibold text-gray-800 flex items-center gap-1.5">
+                            <i class="fas fa-university text-gray-600 text-sm"></i>
+                            Crédito Bancario
                         </h3>
-                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        <span class="bg-red-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
                             MÁS CARO
                         </span>
                     </div>
                     
-                    <div class="space-y-4">
-                        <div class="bg-gray-900 rounded-lg p-4">
-                            <p class="text-gray-400 text-sm">Cuota Mensual</p>
-                            <p class="text-3xl font-bold text-red-400" id="cuotaBancario">$0</p>
+                    <div class="space-y-2.5">
+                        <div class="bg-gray-50 rounded-md p-2.5 border border-gray-200">
+                            <p class="text-gray-600 text-xs font-medium">Cuota Mensual</p>
+                            <p class="result-number text-red-600" id="cuotaBancario">$0</p>
                         </div>
                         
-                        <div class="space-y-2 text-gray-300">
+                        <div class="space-y-1 text-xs text-gray-700">
                             <div class="flex justify-between">
                                 <span>Monto Financiado:</span>
                                 <strong id="montoBancario">$0</strong>
                             </div>
                             <div class="flex justify-between">
                                 <span>Intereses:</span>
-                                <strong class="text-red-400" id="interesBancario">$0</strong>
+                                <strong class="text-red-600" id="interesBancario">$0</strong>
                             </div>
                             <div class="flex justify-between">
                                 <span>Total a Pagar:</span>
-                                <strong class="text-red-400" id="totalBancario">$0</strong>
+                                <strong class="text-gray-900" id="totalBancario">$0</strong>
                             </div>
-                            <div class="flex justify-between pt-2 border-t border-gray-700">
+                            <div class="flex justify-between pt-1 border-t border-gray-200">
                                 <span>Tasa:</span>
                                 <strong>16% anual</strong>
                             </div>
@@ -337,24 +353,24 @@ app.get('/', (c) => {
             </div>
 
             <!-- Gráfico Comparativo -->
-            <div class="bg-black rounded-2xl p-6 shadow-2xl animate-fade-in">
-                <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                    <i class="fas fa-chart-bar"></i>
+            <div class="bg-white rounded-lg p-3 md:p-4 card-shadow animate-fade-in">
+                <h3 class="text-base font-semibold text-gray-800 mb-2.5 flex items-center gap-2">
+                    <i class="fas fa-chart-bar text-gray-600 text-sm"></i>
                     Comparación Visual
                 </h3>
-                <canvas id="comparisonChart" height="100"></canvas>
+                <canvas id="comparisonChart" height="70"></canvas>
             </div>
 
-            <!-- Botón de WhatsApp -->
-            <div class="bg-black rounded-2xl p-6 shadow-2xl text-center animate-fade-in">
-                <h3 class="text-2xl font-bold text-white mb-4">¿Listo para tu Chevy Plan?</h3>
+            <!-- Botón de WhatsApp (solo visible en móvil) -->
+            <div class="lg:hidden bg-white rounded-lg p-3 md:p-4 card-shadow text-center animate-fade-in">
+                <h3 class="text-sm font-semibold text-gray-800 mb-2">¿Listo para tu ChevyPlan?</h3>
                 <a href="https://wa.me/593981813395" 
                    target="_blank"
-                   class="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition-all">
-                    <i class="fab fa-whatsapp text-2xl"></i>
+                   class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-5 rounded-md text-sm transition-all w-full justify-center">
+                    <i class="fab fa-whatsapp text-lg"></i>
                     Consultar por WhatsApp
                 </a>
-                <p class="text-gray-400 mt-4 text-sm">098 1813 395</p>
+                <p class="text-gray-600 mt-2 text-xs">098 1813 395</p>
             </div>
         </div>
     </div>
@@ -370,7 +386,6 @@ app.get('/', (c) => {
             }).format(amount);
         }
 
-        // Sincronizar input numérico con range
         const montoInput = document.getElementById('monto');
         const montoRange = document.getElementById('montoRange');
         
@@ -412,28 +427,23 @@ app.get('/', (c) => {
         });
 
         function displayResults(data) {
-            // Mostrar sección de resultados
             document.getElementById('resultados').style.display = 'block';
             document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-            // Ahorro
             document.getElementById('ahorroTotal').textContent = formatCurrency(data.ahorroTotal);
             document.getElementById('ahorroDetalle').textContent = 
                 \`Ahorras \${formatCurrency(data.diferenciaCuota)} mensuales\`;
 
-            // Chevy Plan
             document.getElementById('cuotaChevy').textContent = formatCurrency(data.chevyPlan.cuotaMensual);
             document.getElementById('montoChevy').textContent = formatCurrency(data.monto);
             document.getElementById('interesChevy').textContent = formatCurrency(data.chevyPlan.costoFinanciamiento);
             document.getElementById('totalChevy').textContent = formatCurrency(data.chevyPlan.montoTotal);
 
-            // Bancario
             document.getElementById('cuotaBancario').textContent = formatCurrency(data.bancario.cuotaMensual);
             document.getElementById('montoBancario').textContent = formatCurrency(data.monto);
             document.getElementById('interesBancario').textContent = formatCurrency(data.bancario.costoFinanciamiento);
             document.getElementById('totalBancario').textContent = formatCurrency(data.bancario.montoTotal);
 
-            // Gráfico
             updateChart(data);
         }
 
@@ -450,14 +460,14 @@ app.get('/', (c) => {
                     labels: ['Cuota Mensual', 'Costo de Intereses', 'Total a Pagar'],
                     datasets: [
                         {
-                            label: 'Chevy Plan',
+                            label: 'ChevyPlan',
                             data: [
                                 data.chevyPlan.cuotaMensual,
                                 data.chevyPlan.costoFinanciamiento,
                                 data.chevyPlan.montoTotal
                             ],
-                            backgroundColor: 'rgba(255, 215, 0, 0.8)',
-                            borderColor: 'rgba(255, 215, 0, 1)',
+                            backgroundColor: 'rgba(200, 164, 94, 0.8)',
+                            borderColor: 'rgba(200, 164, 94, 1)',
                             borderWidth: 2
                         },
                         {
@@ -467,8 +477,8 @@ app.get('/', (c) => {
                                 data.bancario.costoFinanciamiento,
                                 data.bancario.montoTotal
                             ],
-                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                            borderColor: 'rgba(239, 68, 68, 1)',
+                            backgroundColor: 'rgba(220, 38, 38, 0.8)',
+                            borderColor: 'rgba(220, 38, 38, 1)',
                             borderWidth: 2
                         }
                     ]
@@ -479,11 +489,12 @@ app.get('/', (c) => {
                     plugins: {
                         legend: {
                             labels: {
-                                color: '#fff',
+                                color: '#374151',
                                 font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
+                                    size: 11,
+                                    weight: '600'
+                                },
+                                padding: 12
                             }
                         },
                         tooltip: {
@@ -498,20 +509,24 @@ app.get('/', (c) => {
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                color: '#fff',
+                                color: '#6B7280',
+                                font: {
+                                    size: 10
+                                },
                                 callback: function(value) {
                                     return formatCurrency(value);
                                 }
                             },
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.05)'
                             }
                         },
                         x: {
                             ticks: {
-                                color: '#fff',
+                                color: '#374151',
                                 font: {
-                                    weight: 'bold'
+                                    size: 10,
+                                    weight: '600'
                                 }
                             },
                             grid: {
@@ -523,7 +538,6 @@ app.get('/', (c) => {
             });
         }
 
-        // Calcular automáticamente al cargar
         window.addEventListener('load', () => {
             document.getElementById('calculatorForm').dispatchEvent(new Event('submit'));
         });
@@ -534,7 +548,6 @@ app.get('/', (c) => {
   return c.html(html);
 });
 
-// Ruta de healthcheck
 app.get('/health', (c) => {
     return c.text('ok', 200);
 });
