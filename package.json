@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "tsx server.js",
-    "start": "node --loader tsx server.js",
+    "start": "npx tsx server.js",
     "build": "npm install"
 },
   "dependencies": {
