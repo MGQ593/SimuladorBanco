@@ -1,0 +1,12 @@
+node_modules
+.git
+.github
+logs
+out.log
+err.log
+combined.log
+dist
+build
+.DS_Store
+*.tgz
+npm-debug.log

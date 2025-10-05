@@ -1,0 +1,24 @@
+{
+  "type": "module", 
+  "name": "chevy-simulator",
+  "version": "1.0.0",
+  "description": "Simulador de Financiamiento Chevy Plan",
+  "scripts": {
+    "dev": "tsx server.js",
+    "build": "vite build",
+    "deploy": "wrangler pages deploy"
+},
+  "dependencies": {
+    "@hono/node-server": "^1.19.5",
+    "hono": "^4.0.0",
+    "tsx": "^4.20.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251004.0",
+    "@hono/vite-dev-server": "^0.15.1",
+    "@types/node": "^24.6.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12",
+    "wrangler": "^3.28.2"
+  }
+}

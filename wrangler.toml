@@ -1,0 +1,7 @@
+name = "chevy-simulator"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "./dist"
+
+[dev]
+port = 3000
+ip = "0.0.0.0"
